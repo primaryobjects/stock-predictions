@@ -39,6 +39,8 @@ Charts are available for each [year](https://github.com/primaryobjects/stock-pre
 
 ![Overview of Predicitions](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/2017/overview-2017.png)
 
+![Bulls vs Bears by Year](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/bulls-vs-bears.png)
+
 ## References
 
 [Bogleheads.org](https://www.bogleheads.org/)

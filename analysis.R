@@ -19,23 +19,27 @@ analyze <- function(originals, cleans, opens) {
   write.csv(bids$original, file='data/predictions-raw.csv')
   write.csv(bids$clean, file='data/predictions.csv')
   
+  bullsBears <- data.frame(year=numeric(), bulls=numeric(), bears=numeric())
+  
   ### PLOTTING
   sapply(seq(1:length(cleans)), function(i) {
     data <- cleans[[i]]
     OPEN <- opens[[i]]
 
-    YEAR <- format(as.POSIXct(data[1,]$date), '%Y')
+    YEAR <- as.numeric(format(as.POSIXct(data[1,]$date), '%Y'))
     DATE <- paste(YEAR, '01-04', sep = '-')
     bulls <- data[data$bull == TRUE,]
     bears <- data[data$bull == FALSE,]
-  
+
+    bullsBears <<- rbind(bullsBears, list(year=YEAR, bulls=nrow(bulls), bears=nrow(bears)))
+    
     # Change in bid by post history.
     fit <- lm(data$bid ~ I(data$history - mean(data$history)))
     fit
-  
+
     # Create folder.
     dir.create(paste('images', YEAR, sep='/'), showWarnings=FALSE)
-    
+
     g <- ggplot(data[data$bid <= MAX_BID_TO_IGNORE,], aes(x = date, y = bid))
     g <- g + geom_point()
     g <- g + ggtitle(paste0(YEAR, ' S&P 500 Predictions'))
@@ -44,14 +48,14 @@ analyze <- function(originals, cleans, opens) {
     g <- g + xlab('Date')
     g <- g + ylab('S&P 500 Prediction')
     g <- g + geom_smooth(method = "lm", se=FALSE, color="red")
-    
+
     # Save chart.
     x <- as.POSIXlt(max(data$date))
     x$mday <- x$mday - 1
     x <- as.POSIXct(x)
     saveChart(g, paste0('images/', YEAR, '/bids-', YEAR, '.png'), aes(label = 'primaryobjects.com', x = x, y = 0))
     print(g)
-    
+
     g <- ggplot(data[data$bid <= MAX_BID_TO_IGNORE,], aes(x = history, y = bid))
     g <- g + geom_point()
     g <- g + ggtitle('Prediction vs Post History')
@@ -60,11 +64,11 @@ analyze <- function(originals, cleans, opens) {
     g <- g + xlab('# of Posts')
     g <- g + ylab('S&P 500 Prediction')
     g <- g + geom_smooth(method = "lm", se=FALSE, color="red")
-    
+
     # Save chart.
     saveChart(g, paste0('images/', YEAR, '/history-', YEAR, '.png'), aes(label = 'primaryobjects.com', x = 30000, y = 0))
     print(g)
-    
+
     g <- ggplot(data[data$bid <= MAX_BID_TO_IGNORE,], aes(x = date, y = bid, colour = bull))
     g <- g + geom_point()
     g <- g + ggtitle(paste0('Are Predictions Bullish or Bearish in ', YEAR, '?'))
@@ -78,13 +82,13 @@ analyze <- function(originals, cleans, opens) {
     g <- g + geom_text(aes(x=max(data$date), y=OPEN-40, label=round(OPEN, 2)), color='black', size=3)
     g <- g + geom_text(aes(x=as.POSIXct(DATE), y=3150, label= paste0('Bulls = ', nrow(bulls))), color='darkgreen', size=10)
     g <- g + geom_text(aes(x=as.POSIXct(DATE), y=1350, label= paste0('Bears = ', nrow(bears))), color='red', size=10)
-    
+
     # Save chart.
     saveChart(g, paste0('images/', YEAR, '/bullsvsbears-', YEAR, '.png'), aes(label = 'primaryobjects.com', x = as.POSIXct(DATE), y = 0))
     print(g)
-    
+
     stats <- data.frame(Lowest = min(data[data$bid <= MAX_BID_TO_IGNORE,]$bid), Average = mean(data[data$bid <= MAX_BID_TO_IGNORE,]$bid), Highest = max(data[data$bid <= MAX_BID_TO_IGNORE,]$bid))
-    
+
     g <- ggplot(data[data$bid <= MAX_BID_TO_IGNORE,], aes(bid))
     g <- g + geom_histogram(binwidth=100, col='gray', alpha = .7)
     g <- g + ggtitle('Histogram of Predictions')
@@ -93,11 +97,11 @@ analyze <- function(originals, cleans, opens) {
     g <- g + ylab('# of Guesses in Range')
     g <- g + geom_vline(aes(xintercept = stats$Average), colour = 'blue')
     g <- g + annotate("text", x = c(stats$Average), y=c(170), label = paste0('Average = ', round(stats$Average, 2)), size = 6, colour = 'blue')
-    
+
     # Save chart.
     saveChart(g, paste0('images/', YEAR, '/histogram-', YEAR, '.png'), aes(label = 'primaryobjects.com', x = stats$Highest - 500, y = 0), 0, 6)
     print(g)
-    
+
     g <- ggplot(melt(stats), aes(x = variable, y = value))
     g <- g + geom_bar(alpha=I(.9), stat='identity')
     g <- g + ggtitle(paste0('Overview of ', YEAR, ' Predictions'))
@@ -107,11 +111,30 @@ analyze <- function(originals, cleans, opens) {
     g <- g + theme(plot.title = element_text(size=20, face="bold", vjust=2), axis.text.x = element_text(angle = 45, hjust = 1))
     g <- g + theme(legend.title=element_blank())
     g <- g + annotate("text", x = c(1,2,3), y=c(stats$Lowest / 2, stats$Average / 2, stats$Highest / 2), label = c(stats$Lowest, round(stats$Average, 2), stats$Highest), colour = 'white')
-    
+
     # Save chart.
     saveChart(g, paste0('images/', YEAR, '/overview-', YEAR, '.png'), aes(label = 'primaryobjects.com', x = 3, y = 0))
     print(g)
   })
+  
+  # Transpose the data.frame into a format for plotting with variable colors.                       
+  bullBearCounts <- melt(bullsBears, id='year')
+  
+  # Draw bar chart of bulls vs bears across the years.
+  g <- ggplot(bullBearCounts, aes(x = year, y = value, fill = variable))
+  g <- g + geom_bar(alpha=I(.9), stat='identity')
+  g <- g + ggtitle('Bulls vs Bears by Year')
+  g <- g + theme_bw()
+  g <- g + theme(plot.title = element_text(size=20, face="bold", vjust=2), axis.text.x = element_text(angle = 45, hjust = 1))
+  g <- g + xlab('Year')
+  g <- g + ylab('Number of Predictions')
+  g <- g + scale_fill_manual(values=c('#00bb00', '#bb0000'), labels=c('Bulls', 'Bears'))
+  g <- g + theme(legend.title=element_blank())
+  g <- g + geom_text(aes(label=value), position=position_stack(vjust=0.5), vjust=0, size=4, colour='#ffffff')
+
+  # Save chart.
+  saveChart(g, 'images/bulls-vs-bears.png', aes(label = 'primaryobjects.com', x = 3, y = 0))
+  print(g)
 }
 
 # Collect bids.
