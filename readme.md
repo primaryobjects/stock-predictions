@@ -1,11 +1,13 @@
 S&P 500 Stock Predictions
 -------------------------------
 
-A dataset of stock predictions submitted by forum community users, as part of the bogleheads.org stock market prediction contest.
+A dataset of stock predictions from 2010 to 2017, submitted by forum community users as part of the bogleheads.org stock market prediction contest.
 
 This project collects all user guesses for the ending price of the stock market's S&P 500 at the end of the year. Users submit their guesses within the first 10 days of the year.
 
 ## The Dataset
+
+Data was collected from forum postings from the years 2010 to 2017. Each post was made during the first week of the year, and contained a prediction for the ending price of the S&P 500 for the given year.
 
 Download the [raw](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/data/predictions-raw.csv) or [pre-processed](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/data/predictions.csv) dataset as a CSV file.
 
