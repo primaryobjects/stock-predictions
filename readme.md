@@ -27,15 +27,15 @@ The predictions-raw CSV file contains stock market predictions, collected in the
 
 ## Results
 
-The following charts were produced from the dataset.
+Charts are available for each [year](https://github.com/primaryobjects/stock-predictions/tree/master/images) in the dataset. The following were produced from the dataset for the year 2017.
 
-![2017 S&P 500 Predicitions](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/bids-2017.png)
+![2017 S&P 500 Predicitions](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/2017/bids-2017.png)
 
-![Are predictions bullish or bearish in 2017?](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/bullsvsbears-2017.png)
+![Are predictions bullish or bearish in 2017?](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/2017/bullsvsbears-2017.png)
 
-![Histogram of Predicitions](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/histogram-2017.png)
+![Histogram of Predicitions](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/2017/histogram-2017.png)
 
-![Overview of Predicitions](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/overview-2017.png)
+![Overview of Predicitions](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/2017/overview-2017.png)
 
 ## References
 
