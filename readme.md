@@ -10,10 +10,15 @@ This project collects all user guesses for the ending price of the stock market'
 The dataset contains the following fields:
 
 "id" - A unique id for the original form post.
+
 "author" - User name of the guess.
+
 "history" - Total number of posts made by the user.
+
 "date" - Date of the guess.
+
 "bid" - S&P 500 ending year guess.
+
 "bull" - True if the guess is greater than the S&P 500 opening day price.
 
 ## References
