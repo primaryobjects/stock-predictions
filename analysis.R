@@ -84,7 +84,7 @@ analyze <- function(originals, cleans, opens) {
     g <- g + geom_text(aes(x=as.POSIXct(DATE), y=1350, label= paste0('Bears = ', nrow(bears))), color='red', size=10)
 
     # Save chart.
-    saveChart(g, paste0('images/', YEAR, '/bullsvsbears-', YEAR, '.png'), aes(label = 'primaryobjects.com', x = as.POSIXct(DATE), y = 0))
+    saveChart(g, paste0('images/', YEAR, '/bullsvsbears-', YEAR, '.png'), aes(label = 'primaryobjects.com', x = x, y = 0))
     print(g)
 
     stats <- data.frame(Lowest = min(data[data$bid <= MAX_BID_TO_IGNORE,]$bid), Average = mean(data[data$bid <= MAX_BID_TO_IGNORE,]$bid), Highest = max(data[data$bid <= MAX_BID_TO_IGNORE,]$bid))
@@ -133,7 +133,8 @@ analyze <- function(originals, cleans, opens) {
   g <- g + geom_text(aes(label=value), position=position_stack(vjust=0.5), vjust=0, size=4, colour='#ffffff')
 
   # Save chart.
-  saveChart(g, 'images/bulls-vs-bears.png', aes(label = 'primaryobjects.com', x = 3, y = 0))
+  x <- as.numeric(YEAR) - 1
+  saveChart(g, 'images/bulls-vs-bears.png', aes(label = 'primaryobjects.com', x = x, y = 0), 0, 7)
   print(g)
 }
 
