@@ -119,6 +119,9 @@ analyze <- function(originals, cleans, opens) {
   
   # Transpose the data.frame into a format for plotting with variable colors.                       
   bullBearCounts <- melt(bullsBears, id='year')
+
+  # Add column of percentage of bearishness for each year.  
+  bullBearCounts <- cbind(bullBearCounts, bearish=bullBears[bullBears$variable == 'bears',]$value / bullBears[bullBears$variable == 'bulls',]$value)
   
   # Draw bar chart of bulls vs bears across the years.
   g <- ggplot(bullBearCounts, aes(x = year, y = value, fill = variable))
@@ -136,6 +139,24 @@ analyze <- function(originals, cleans, opens) {
   x <- as.numeric(YEAR) - 1
   saveChart(g, 'images/bulls-vs-bears.png', aes(label = 'primaryobjects.com', x = x, y = 0), 0, 7)
   print(g)
+
+  # Draw line chart of bearishness across the years.
+  g <- ggplot(bullBears[bullBears$variable=='bears',], aes(x = year, y = bearish * 100))
+  g <- g + geom_line(alpha=I(.9), colour='red', size=2)
+  g <- g + ggtitle('Bearish Sentiment by Year')
+  g <- g + theme_bw()
+  g <- g + theme(plot.title = element_text(size=20, face="bold", vjust=2), axis.text.x = element_text(angle = 45, hjust = 1))
+  g <- g + xlab('Year')
+  g <- g + ylab('Percent of Bearish Predictions')
+  g <- g + theme(legend.title=element_blank())
+  g <- g + geom_text(aes(label=paste0(round(bearish * 100), '%')), alpha=I(.7), vjust=-1.2, size=4, colour='black')
+  
+  # Save chart.
+  x <- as.numeric(YEAR) - 1
+  saveChart(g, 'images/bear-sentiment.png', aes(label = 'primaryobjects.com', x = x, y = 0), 0, 7)
+  print(g)
+  
+  bullBearCounts
 }
 
 # Collect bids.
