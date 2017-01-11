@@ -121,7 +121,7 @@ analyze <- function(originals, cleans, opens) {
   bullBearCounts <- melt(bullsBears, id='year')
 
   # Add column of percentage of bearishness for each year.  
-  bullBearCounts <- cbind(bullBearCounts, bearish=bullBearCounts[bullBearCounts$variable == 'bears',]$value / bullBearCounts[bullBearCounts$variable == 'bulls',]$value)
+  bullBearCounts <- cbind(bullBearCounts, bearish=bullBearCounts[bullBearCounts$variable == 'bears',]$value / (bullBearCounts[bullBearCounts$variable == 'bears',]$value + bullBearCounts[bullBearCounts$variable == 'bulls',]$value))
   
   # Draw bar chart of bulls vs bears across the years.
   g <- ggplot(bullBearCounts, aes(x = year, y = value, fill = variable))
