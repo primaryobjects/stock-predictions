@@ -41,6 +41,8 @@ Charts are available for each [year](https://github.com/primaryobjects/stock-pre
 
 ![Bulls vs Bears by Year](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/bulls-vs-bears.png)
 
+![Bearish Sentiment by Year](https://raw.githubusercontent.com/primaryobjects/stock-predictions/master/images/bear-sentiment.png)
+
 ## References
 
 [Bogleheads.org](https://www.bogleheads.org/)
