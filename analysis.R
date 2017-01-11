@@ -121,7 +121,7 @@ analyze <- function(originals, cleans, opens) {
   bullBearCounts <- melt(bullsBears, id='year')
 
   # Add column of percentage of bearishness for each year.  
-  bullBearCounts <- cbind(bullBearCounts, bearish=bullBears[bullBears$variable == 'bears',]$value / bullBears[bullBears$variable == 'bulls',]$value)
+  bullBearCounts <- cbind(bullBearCounts, bearish=bullBearCounts[bullBearCounts$variable == 'bears',]$value / bullBearCounts[bullBearCounts$variable == 'bulls',]$value)
   
   # Draw bar chart of bulls vs bears across the years.
   g <- ggplot(bullBearCounts, aes(x = year, y = value, fill = variable))
@@ -141,7 +141,7 @@ analyze <- function(originals, cleans, opens) {
   print(g)
 
   # Draw line chart of bearishness across the years.
-  g <- ggplot(bullBears[bullBears$variable=='bears',], aes(x = year, y = bearish * 100))
+  g <- ggplot(bullBearCounts[bullBearCounts$variable=='bears',], aes(x = year, y = bearish * 100))
   g <- g + geom_line(alpha=I(.9), colour='red', size=2)
   g <- g + ggtitle('Bearish Sentiment by Year')
   g <- g + theme_bw()
